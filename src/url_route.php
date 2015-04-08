@@ -50,6 +50,7 @@ class url_route {
 		$front = $wp_rewrite->front;
 		$routes = array();
 
+		//create archive routes
 		foreach( $post_types as $post_type ) {
 			$type = 'post';
 			if ( ! in_array( $post_type, array( 'post', 'page' ) ) ) {
@@ -73,7 +74,7 @@ class url_route {
 
 		}
 
-
+		//create single routes
 		foreach( $rules as $content_type => $rule ) {
 
 			$rule_parsed = explode( '/', $rule[ 'struct'] );
@@ -138,6 +139,7 @@ class url_route {
 			$url_map = str_replace( $tag, ':name', $this_structure[ 'struct' ] );
 
 			$routes[] = $this->angular_route( $url_map, $end_point, $type, $name );
+
 		}
 
 		return $routes;

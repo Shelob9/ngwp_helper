@@ -45,7 +45,7 @@ define( 'NGWP_HELPER_VER',  '0.0.1' );
  */
 add_action( 'init', 'ngwp_helper_maybe_load', 1 );
 function ngwp_helper_maybe_load() {
-	if ( function_exists( 'json_url' ) && version_compare( PHP_VERSION, '5.4.0' ) >= 0 ) {
+	if ( function_exists( 'json_url' ) && version_compare( PHP_VERSION, '5.5.0' ) >= 0 ) {
 		include_once( NGWP_HELPER_PATH . 'src/url_route.php' );
 		include_once( NGWP_HELPER_PATH . 'src/functions.php' );
 	}

@@ -16,10 +16,9 @@
  *
  * @uses "wp_json_server_before_serve" filter
  */
-apply_filters( 'wp_json_server_before_serve', function ( $server ) {
-	$class = new \ngwp\url_route();
+add_action( 'wp_json_server_before_serve', function (  ) {
+	$class = new \ngwp\url_route(  );
 	add_filter( 'json_endpoints', array( $class, 'register_routes' ), 0 );
 
-	return $server;
 }, 10, 1 );
 

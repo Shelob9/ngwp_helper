@@ -47,7 +47,33 @@ class url_route {
 		$post_types = get_post_types();
 		$taxonomies = get_taxonomies();
 
+		$front = $wp_rewrite->front;
 		$routes = array();
+
+		foreach( $post_types as $post_type ) {
+			$type = 'post';
+			if ( ! in_array( $post_type, array( 'post', 'page' ) ) ) {
+				$post_type_object = get_post_type_object( $post_type );
+				if ( is_object( $post_type_object ) ) {
+					if ( $post_type_object->has_archive ) {
+						$url_map = $post_type_object->rewrite[ 'slug' ];
+						if ( $post_type_object->rewrite[ 'with_front' ] ) {
+							$url_map = trailingslashit( $front ) . $url_map;
+						}
+
+						$endpoint = 'type[]='.$post_type;
+
+						$routes[] = $this->angular_route( $url_map, $endpoint, $type, $post_type, 'archive' );
+
+					}
+
+				}
+
+			}
+
+		}
+
+
 		foreach( $rules as $content_type => $rule ) {
 
 			$rule_parsed = explode( '/', $rule[ 'struct'] );
@@ -111,19 +137,40 @@ class url_route {
 
 			$url_map = str_replace( $tag, ':name', $this_structure[ 'struct' ] );
 
-			$routes[] = array(
-				'url' => $url_map,
-				'template' => 'single',
-				'endpoint' => $end_point,
-				'params' => array(
-					'type' => $type,
-					'name' => $name
-				)
-
-			);
+			$routes[] = $this->angular_route( $url_map, $end_point, $type, $name );
 		}
 
 		return $routes;
+
+	}
+
+	/**
+	 * Construct a route for Angular
+	 *
+	 * @since 0.0.1
+	 *
+	 * @access protected
+	 *
+	 * @param string $url_map The URL map.
+	 * @param string $end_point Endpoint to query.
+	 * @param string $type Content type.
+	 * @param string $name Content type name.
+	 * @param string $template Template for Angular to use.
+	 * @return array
+	 */
+	protected function angular_route( $url_map, $end_point, $type, $name, $template = 'single' ) {
+		$route = array(
+			'url'      => $url_map,
+			'template' => $template,
+			'endpoint' => $end_point,
+			'params'   => array(
+				'type' => $type,
+				'name' => $name
+			)
+
+		);
+
+		return $route;
 
 	}
 
